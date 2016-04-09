@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use Illuminate\Support\Facades\Auth;
 use App\User;
+use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
@@ -87,22 +88,21 @@ use AuthenticatesAndRegistersUsers,
      * @return View 
      */
     public function login(LoginRequest $request) {
-        
+
         # retrieve user Info from the request
-        $validation['name'] = $request->input('username');
-        $validation['password'] = $request->input('password');
-        
+        $validation['name']     = trim($request->input('username'));
+        $validation['password'] = trim($request->input('password'));
+
         # attempt Login
         if (Auth::attempt($validation)) {
             # redirect to the dashboard after successfull login
             return redirect()->route('dashboard');
         }
         else {
-            
             # else go back to the login page with error information
             return redirect()->back()
-                ->withInput($request->except('password'))
-                ->with("login_message","Invalid Username or Password");
+                    ->withInput($request->except('password'))
+                    ->with("login_message", "Invalid Username or Password");
         }
     }
 

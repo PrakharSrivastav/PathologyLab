@@ -17,7 +17,7 @@ class PatientController extends Controller {
      */
     public function index() {
         $title    = "Patients";
-        $patients = User::patients()->orderBy('id','DESC')->get();
+        $patients = User::patients()->orderBy('id', 'DESC')->get();
         return view("login.patients", compact("title", "patients"));
     }
 
@@ -39,24 +39,24 @@ class PatientController extends Controller {
      */
     public function store(PatientRequest $request) {
         $user              = new User;
-        $user->name        = $request->patientname;
-        $user->email       = $request->email;
-        $user->passcode    = $request->passcode;
-        $user->password    = Hash::make($request->passcode);
+        $user->name        = trim($request->patientname);
+        $user->email       = trim($request->email);
+        $user->passcode    = trim($request->passcode);
+        $user->password    = trim($request->passcode);
         $user->is_operator = '0';
-        $user->dob         = $request->dob;
-        $user->sex         = $request->sex;
+        $user->dob         = trim($request->dob);
+        $user->sex         = trim($request->sex);
 
-        $count = User::where("name",$user->name)->orWhere("email",$user->email)->count();
+        $count = User::where("name", $user->name)->orWhere("email", $user->email)->count();
         if ($count === 0) {
             $user->save();
             return redirect()->route('patient.index');
         }
-        else{
+        else {
             return redirect()
-                ->back()
-                ->withInput()
-                ->with("login_message","User with same name or email already exists");
+                    ->back()
+                    ->withInput()
+                    ->with("login_message", "User with same name or email already exists");
         }
     }
 
@@ -67,9 +67,9 @@ class PatientController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function show($patient) {
-        $patient = User::patients()->where('id',$patient)->first();
-        $title = "View Patient";
-        return view("login.view-patient", compact("title","patient"));
+        $patient = User::patients()->where('id', $patient)->first();
+        $title   = "View Patient";
+        return view("login.view-patient", compact("title", "patient"));
     }
 
     /**
@@ -79,9 +79,9 @@ class PatientController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function edit($patient) {
-        $title = "Edit Patient";
-        $patient = User::patients()->where('id',$patient)->first();
-        return view("login.edit-patient", compact("title","patient"));
+        $title   = "Edit Patient";
+        $patient = User::patients()->where('id', $patient)->first();
+        return view("login.edit-patient", compact("title", "patient"));
     }
 
     /**
@@ -92,11 +92,11 @@ class PatientController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function update(PatientRequest $request, $patient) {
-        $patient = User::findorFail($patient);
+        $patient              = User::findorFail($patient);
         $patient->name        = $request->patientname;
         $patient->email       = $request->email;
         $patient->passcode    = $request->passcode;
-        $patient->password    = Hash::make($request->passcode);
+        $patient->password    = trim($request->passcode);
         $patient->is_operator = '0';
         $patient->dob         = $request->dob;
         $patient->sex         = $request->sex;

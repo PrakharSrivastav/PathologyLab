@@ -35,7 +35,8 @@ class User extends Authenticatable {
      * @param type $name
      */
     public function setNameAttribute($name) {
-        $this->attributes['name'] = strtolower($name);
+        $this->attributes['name'] = strtolower(str_slug($name, "_"));
+                
     }
 
     /**

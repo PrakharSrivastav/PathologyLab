@@ -33,7 +33,7 @@ class LoginRequest extends Request
     public function rules()
     {
         return [
-            "username" => "required|alpha_num|min:3",
+            "username" => "required|alpha_dash|min:3",
             "password" => "required"
         ];
     }
