@@ -91,27 +91,36 @@ class OperatorReportsTest extends TestCase {
             // check if the new report are in the database
             ->seeInDatabase("reports", [
                 "id"          => $report->id,
-                "report_name"  => "testreportname",
+                "report_name" => "testreportname",
                 "description" => "thesearerandomreportdetails"
             ])
             // check if the new report details are on the webpage
             ->seePageIs('dashboard')->see("testreportname")->see("thesearerandomreportdetails");
     }
 
+    // create a report
+    // login as the operator
+    // go to the dashboard
+    // click on the delete button for the report
+    // check that you dont see the report in the webpage
+
     public function testDeleteReport() {
         $operator = $this->createOperator();
-        // login as the operator
-        // create a report
-        // go to the dashboard
-        // click on the delete button for the report
-        // check that you dont see the report in the webpage
-        return false;
+        $patient  = $this->createPatient();
+        $report   = $this->createReport($patient);
+        $this->actingAs($operator)->visit("dashboard")->see("delete_$report->id")
+            ->press("delete_$report->id")
+            ->seePageIs("dashboard")
+            ->dontSee($patient->name)
+            ->dontSee($report->report_name)
+            ->dontSee("delete_$report->id")
+            ->dontSee($report->case_number);
     }
 
     public function testViewReport() {
         $operator = $this->createOperator();
-        $patient = $this->createPatient();
-        $report = $this->createReport($patient);
+        $patient  = $this->createPatient();
+        $report   = $this->createReport($patient);
         // click on the view report button
         $this->actingAs($operator)
             ->visit("report/$report->id")
@@ -123,6 +132,25 @@ class OperatorReportsTest extends TestCase {
             ->see($report->report_name)
             ->see($report->patient_history);
     }
+
+//
+//    public function testDeleteReport() {
+//        // create a patient in the database
+//        $patient  = $this->createPatient();
+//        // create an operator
+//        $operator = $this->createOperator();
+//        // go to the patient page
+//        $this->actingAs($operator)
+//            ->visit('/patient')
+//            ->seePageIs('/patient')
+//            ->see("delete_$patient->id")
+//            // click on delete
+//            ->press("delete_$patient->id")->see('List Of Patients')->seePageIs('/patient')
+//            // check if the webpage shows the deleted user
+//            ->dontSee($patient->name)
+//            ->dontSee($patient->email)
+//            ->dontSee("delete_$patient->id");
+//    }
 
     public function testEmailReport() {
         $operator = $this->createOperator();

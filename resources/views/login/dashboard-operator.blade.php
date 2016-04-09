@@ -32,9 +32,9 @@
                         <td><a class="btn btn-sm btn-default btn-action btn-block" href="{{route('report.show',['id'=>$report->id])}}">{{($report->status == "")?"-":$report->status}}</a></td>
                         <td><a class="btn btn-sm btn-default btn-action btn-block" href="{{route('report.show',['id'=>$report->id])}}">{{($report->description == "")?"-":$report->description}}</a></td>
                         <td><a class="btn btn-sm btn-default btn-action btn-block" href="{{route('report.show',['id'=>$report->id])}}">{{($report->test_date == "")?"-":$report->test_date->format('d-m-Y')}}</a></td>
-                        <td><a class="btn btn-sm btn-info btn-action-normal btn-block" href="{{route('report.show',['id'=>$report->id])}}"><span class="glyphicon glyphicon-eye-open"></span></td>
-                        <td><a class="btn btn-sm btn-warning btn-action-normal btn-block" href="{{route('report.edit',['id'=>$report->id])}}"><span class="glyphicon glyphicon-edit"></span></td>
-                        <td><form action="{{route('report.destroy',['report'=>$report->id])}}" method="post">{{ csrf_field() }}<input type="hidden" name="_method" value="DELETE"><button type="submit" class="btn delete btn-sm btn-danger btn-action-normal btn-block"><span class="glyphicon glyphicon-trash"></span></button></form></td>
+                        <td><a class="btn btn-sm btn-info btn-action-normal btn-block" href="{{route('report.show',['id'=>$report->id])}}"><span class="glyphicon glyphicon-eye-open"></span></a></td>
+                        <td><a class="btn btn-sm btn-warning btn-action-normal btn-block" href="{{route('report.edit',['id'=>$report->id])}}"><span class="glyphicon glyphicon-edit"></span></a></td>
+                        <td><form action="{{route('report.destroy',['report'=>$report->id])}}" method="post">{{ csrf_field() }}<input type="hidden" name="_method" value="DELETE"><button type="submit" id="delete_{{$report->id}}" class="btn delete btn-sm btn-danger btn-action-normal btn-block"><span class="glyphicon glyphicon-trash"></span></button></form></td>
                     </tr>
                     @endforeach
                     @endif

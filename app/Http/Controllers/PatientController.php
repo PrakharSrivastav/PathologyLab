@@ -111,7 +111,7 @@ class PatientController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function destroy($patient) {
-        User::patients()->findOrFail($patient)->delete();
+        User::destroy($patient);
         return redirect()->route('patient.index');
     }
 

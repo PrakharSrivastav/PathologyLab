@@ -5,7 +5,7 @@
     <div class="col-xs-12 col-sm-8 col-sm-offset-2 ">
         <div class="row">
             <a href="{{route('report.edit',['id'=>$report->id])}}" class="pull-left btn btn-warning">Edit Report</a>
-            <form action="{{route('report.destroy',['report'=>$report->id])}}" method="post">{{ csrf_field() }}<input type="hidden" name="_method" value="DELETE"><button type="submit" class="btn delete btn-danger pull-right">Delete Report</button></form>
+            <form action="{{route('report.destroy',['report'=>$report->id])}}" method="post">{{ csrf_field() }}<input type="hidden" name="_method" value="DELETE"><button type="submit" id="delete_{{$report->id}}" class="btn delete btn-danger pull-right">Delete Report</button></form>
         </div>
         <div class="table-responsive row">
             <h4 class="text-center">Report Details</h4>
