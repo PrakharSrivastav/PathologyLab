@@ -110,11 +110,18 @@ class OperatorReportsTest extends TestCase {
 
     public function testViewReport() {
         $operator = $this->createOperator();
-        // create a patient
-        // create a report
+        $patient = $this->createPatient();
+        $report = $this->createReport($patient);
         // click on the view report button
-        // see if you see the patient and the report on the webpage
-        return false;
+        $this->actingAs($operator)
+            ->visit("report/$report->id")
+            ->seePageIs("report/$report->id")
+            ->see($patient->name)
+            ->see($report->testing_lab)
+            ->see($report->case_number)
+            ->see($report->description)
+            ->see($report->report_name)
+            ->see($report->patient_history);
     }
 
     public function testEmailReport() {

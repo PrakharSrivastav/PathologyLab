@@ -58,7 +58,8 @@ class ReportController extends Controller {
      */
     public function show($report) {
         $title = "Report Details";
-        return view("login.report", compact("title", "report"));
+        $report = Report::findOrFail($report);
+        return view("login.report-operator", compact("report","title"));
     }
 
     /**

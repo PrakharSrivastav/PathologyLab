@@ -56,7 +56,14 @@
             $(document).ready(function(){
                 $(".delete").click(function(e){
                     e.preventDefault();
-                    return confirm("Are you sure you really want to delete");
+                    response =  confirm("Are you sure you rreally want to delete");
+                    console.log(response);
+                    if(response == false){
+                        return false;
+                    }
+                    else{
+                        $(this).parent().submit();
+                    }
                 });
             })
         </script>
