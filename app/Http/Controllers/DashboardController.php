@@ -30,11 +30,8 @@ class DashboardController extends Controller {
      * @return View
      */
     public function index() {
-        # get the current logged in user
-        $user = Auth::user();
-
-        # If User is Operator then login to operator dashboard
-        if ($user->is_operator === '1') {
+        # If current logged-in user is Operator then login to operator dashboard
+        if (Auth::user()->is_operator === '1') {
             return $this->operator_dashboard();
         }
         # else show the patient dashboard

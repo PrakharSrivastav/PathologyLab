@@ -14,6 +14,7 @@ class OperatorReportsTest extends TestCase {
             ->visit('dashboard')
             ->seePageIs('dashboard')
             ->see('List of reports');
+        $this->deleteUser($operator);
     }
 
     public function testCreateNewReport() {
@@ -39,6 +40,9 @@ class OperatorReportsTest extends TestCase {
             )
             // check if the dashboard contains the new patient and the reports details
             ->seePageIs("dashboard")->see($patient->name)->see("Sugar Level Test")->see("Random report details");
+
+        $this->deleteUser($patient);
+        $this->deleteUser($operator);
     }
 
     public function testValidateCreateNewReport() {
@@ -73,6 +77,9 @@ class OperatorReportsTest extends TestCase {
             ->see("The reportdetails field is required")
             ->see("The testdate field is required")
             ->see("The testedby field is required");
+
+        $this->deleteUser($patient);
+        $this->deleteUser($operator);
     }
 
     public function testEditReport() {
@@ -96,6 +103,10 @@ class OperatorReportsTest extends TestCase {
             ])
             // check if the new report details are on the webpage
             ->seePageIs('dashboard')->see("testreportname")->see("thesearerandomreportdetails");
+
+        $this->deleteReport($report);
+        $this->deleteUser($patient);
+        $this->deleteUser($operator);
     }
 
     // create a report
@@ -115,6 +126,10 @@ class OperatorReportsTest extends TestCase {
             ->dontSee($report->report_name)
             ->dontSee("delete_$report->id")
             ->dontSee($report->case_number);
+        
+        $this->deleteReport($report);
+        $this->deleteUser($patient);
+        $this->deleteUser($operator);
     }
 
     public function testViewReport() {
@@ -131,40 +146,10 @@ class OperatorReportsTest extends TestCase {
             ->see($report->description)
             ->see($report->report_name)
             ->see($report->patient_history);
-    }
-
-//
-//    public function testDeleteReport() {
-//        // create a patient in the database
-//        $patient  = $this->createPatient();
-//        // create an operator
-//        $operator = $this->createOperator();
-//        // go to the patient page
-//        $this->actingAs($operator)
-//            ->visit('/patient')
-//            ->seePageIs('/patient')
-//            ->see("delete_$patient->id")
-//            // click on delete
-//            ->press("delete_$patient->id")->see('List Of Patients')->seePageIs('/patient')
-//            // check if the webpage shows the deleted user
-//            ->dontSee($patient->name)
-//            ->dontSee($patient->email)
-//            ->dontSee("delete_$patient->id");
-//    }
-
-    public function testEmailReport() {
-        $operator = $this->createOperator();
-        return false;
-    }
-
-    public function testPDFReport() {
-        $operator = $this->createOperator();
-        return false;
-    }
-
-    public function testDownloadReport() {
-        $operator = $this->createOperator();
-        return false;
+        
+        $this->deleteUser($patient);
+        $this->deleteUser($operator);
+        $this->deleteReport($report);
     }
 
     private function createReport($patient) {
@@ -196,8 +181,8 @@ class OperatorReportsTest extends TestCase {
      */
     private function createPatient() {
         $patient = factory(App\User::class)->create([
-            "name"        => "thisisauniquepatientname",
-            "email"       => "patient@test.com",
+            "name"        => "thisisauniquepatientname".date("ymdhis"),
+            "email"       => "patient".date("ymdhis")."@test.com",
             "password"    => "password",
             "passcode"    => "password",
             "is_operator" => '0']
@@ -205,4 +190,11 @@ class OperatorReportsTest extends TestCase {
         return $patient;
     }
 
+    private function deleteUser($user) {
+        $user->delete();
+    }
+
+    private function deleteReport($report){
+        $report->delete();
+    }
 }

@@ -284,8 +284,8 @@ class OperatorPatientsTest extends TestCase {
      */
     private function createPatient() {
         $patient = factory(App\User::class)->create([
-            "name"        => "thisisauniquepatientname",
-            "email"       => "thisisauniquepatientemail@test.com",
+            "name"        => "thisisauniquepatientname".date("ymdhis"),
+            "email"       => "thisisauniquepatientemail".date("ymdhis")."@test.com",
             "password"    => "thisisauniquepatientpassword",
             "passcode"    => "thisisauniquepatientpassword",
             "is_operator" => '0']

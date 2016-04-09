@@ -3,13 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Requests\PatientRequest;
+use Illuminate\Support\Facades\Gate;
 
 class PatientController extends Controller {
 
+    public function __construct() {
+        if (!Auth::check()) {
+            Auth::logout();
+            return redirect()->route('home');
+        }
+        if(Gate::denies('is_admin')){
+            abort(403);
+        }
+    }
+    
     /**
      * Display a listing of the resource.
      *

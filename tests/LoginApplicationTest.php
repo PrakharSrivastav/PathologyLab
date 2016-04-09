@@ -13,8 +13,6 @@ class LoginApplicationTest extends TestCase {
 
     use DatabaseTransactions;
 
-    protected $user;
-
     /**
      * Test if the application is live and sends 200 response status
      */

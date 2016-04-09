@@ -6,6 +6,8 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class PatientReportsTest extends TestCase {
 
+    use DatabaseTransactions;
+
     /**
      * Test Patient login
      * Create a patient
@@ -18,8 +20,10 @@ class PatientReportsTest extends TestCase {
         $this->actingAs($patient)
             ->visit("dashboard")
             ->seePageIs("dashboard")
-            ->see("Welcome ".$patient->name)
+            ->see("Welcome " . $patient->name)
             ->see("My Reports");
+
+        $this->deleteUser($patient);
     }
 
     public function testViewReports() {
@@ -59,6 +63,10 @@ class PatientReportsTest extends TestCase {
         ]);
 
         return $report;
+    }
+
+    private function deleteUser($user) {
+        $user->delete();
     }
 
 }
