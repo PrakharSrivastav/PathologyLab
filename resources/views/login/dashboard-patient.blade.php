@@ -4,7 +4,7 @@
 <div class="container margin-top-25">
     <div class="col-xs-12">
         <div class="table-responsive">
-            <h4 class="text-center">List of reports</h4>
+            <h4 class="text-center">My Reports</h4>
             <table class="table table-condensed table-striped" id="list_table">
                 <thead>
                     <tr>

@@ -34,11 +34,14 @@
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
-                        <li class="active"><a href="{{route('dashboard')}}">My Reports <span class="sr-only">(current)</span></a></li>
+                        <li class="active"><a href="{{route('dashboard')}}">Reports <span class="sr-only">(current)</span></a></li>
                     </ul>
                     <form class="navbar-form navbar-right"  method="get" action="{{route('logout')}}">
                         <button type="submit" class="btn btn-danger">Logout</button>
                     </form>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a>Welcome {{Auth::user()->name}}</a></li>
+                    </ul>
                 </div><!-- /.navbar-collapse -->
             </div><!-- /.container-fluid -->
         </nav>

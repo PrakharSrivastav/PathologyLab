@@ -27,7 +27,7 @@ class OperatorPatientsTest extends TestCase {
             ->type('31-05-1984', 'dob')
             ->select('1', 'sex')
             ->press('Save Patient Details')->seePageIs("/patient")->see("patient_1")->see("patient@test.cm")->see("password1");
-//        $this->deleteUser($operator);
+        $this->deleteUser($operator);
     }
 
     public function testCreatePatientForm() {
@@ -59,7 +59,7 @@ class OperatorPatientsTest extends TestCase {
                 'is_operator' => '0'
         ]);
 
-//        $this->deleteUser($user);
+        $this->deleteUser($user);
     }
 
     public function testCreatePatientFormValidations() {
@@ -116,7 +116,7 @@ class OperatorPatientsTest extends TestCase {
             ->seePageIs("/patient/create")
             ->see("The dob field is required");
 
-//        $this->deleteUser($user);
+        $this->deleteUser($user);
     }
 
     public function testViewPatient() {
@@ -130,6 +130,8 @@ class OperatorPatientsTest extends TestCase {
             ->see('Patient Details')
             ->see("Patient Name")
             ->see("Date Of Birth");
+        $this->deleteUser($oper);
+        $this->deleteUser($patient);
     }
 
     public function testEditPatient() {
@@ -169,6 +171,8 @@ class OperatorPatientsTest extends TestCase {
             ->see(str_slug("Test Patient", "_"))
             ->see("testemailaddress@test.com")
             ->see("password1");
+        $this->deleteUser($operator);
+        $this->deleteUser($patient);
     }
 
     /**
@@ -195,7 +199,7 @@ class OperatorPatientsTest extends TestCase {
             ->press("Save Patient Details")
             ->seePageIs("/patient/$patient->id/edit")
             ->see("The patientname field is required");
-            
+
         // Test without email
         $this->actingAs($operator)
             ->visit("/patient/$patient->id/edit")
@@ -207,7 +211,7 @@ class OperatorPatientsTest extends TestCase {
             ->press("Save Patient Details")
             ->seePageIs("/patient/$patient->id/edit")
             ->see("The email field is required");
-        
+
         // Test without passcode
         $this->actingAs($operator)
             ->visit("/patient/$patient->id/edit")
@@ -219,7 +223,7 @@ class OperatorPatientsTest extends TestCase {
             ->press("Save Patient Details")
             ->seePageIs("/patient/$patient->id/edit")
             ->see("The passcode field is required");
-        
+
         // Test without any parameters
         $this->actingAs($operator)
             ->visit("/patient/$patient->id/edit")
@@ -233,6 +237,8 @@ class OperatorPatientsTest extends TestCase {
             ->see("The email field is required")
             ->see("The patientname field is required")
             ->see("The dob field is required");
+        $this->deleteUser($patient);
+        $this->deleteUser($operator);
     }
 
     public function testPatientDeletion() {
@@ -253,6 +259,8 @@ class OperatorPatientsTest extends TestCase {
             ->dontSee($patient->name)
             ->dontSee($patient->email)
             ->dontSee("delete_$patient->id");
+        $this->deleteUser($patient);
+        $this->deleteUser($operator);
     }
 
     /**
@@ -277,12 +285,15 @@ class OperatorPatientsTest extends TestCase {
     private function createPatient() {
         $patient = factory(App\User::class)->create([
             "name"        => "thisisauniquepatientname",
-            "email"       => "patient@test.com",
-            "password"    => "password",
-            "passcode"    => "password",
+            "email"       => "thisisauniquepatientemail@test.com",
+            "password"    => "thisisauniquepatientpassword",
+            "passcode"    => "thisisauniquepatientpassword",
             "is_operator" => '0']
         );
         return $patient;
     }
 
+    private function deleteUser($user){
+        $user->delete();
+    }
 }
