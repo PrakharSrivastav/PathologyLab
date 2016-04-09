@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\User;
+use Illuminate\Support\Facades\Auth;
 use App\Report;
 use App\Http\Requests\ReportRequest;
 use Illuminate\Support\Facades\Gate;
@@ -69,10 +70,16 @@ class ReportController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function show($report) {
+        $report = Report::findOrFail($report);
         if (Gate::allows('view_reports', $report)) {
-            $title  = "Report Details";
-            $report = Report::findOrFail($report);
-            return view("login.report-operator", compact("report", "title"));
+            $title = "Report Details";
+            if(Auth::user()->is_operator == "1"){
+                return view("login.report-operator", compact("report", "title"));
+            }
+            else{
+                return view("login.report", compact("report", "title"));
+            }
+            
         }
         else {
             return $this->showDashboard();
