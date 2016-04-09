@@ -4,7 +4,7 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class OperatorPatientTest extends TestCase {
+class OperatorPatientsTest extends TestCase {
 
     use DatabaseTransactions;
 
@@ -26,10 +26,9 @@ class OperatorPatientTest extends TestCase {
             ->type("password1", "passcode")
             ->type('31-05-1984', 'dob')
             ->select('1', 'sex')
-            ->press('Save Patient Details')->seePageIs("/patient")->see("patient 1")->see("patient@test.cm")->see("password1");
+            ->press('Save Patient Details')->seePageIs("/patient")->see("patient_1")->see("patient@test.cm")->see("password1");
 //        $this->deleteUser($operator);
     }
-
 
     public function testCreatePatientForm() {
         $user = $this->createOperator();
@@ -44,11 +43,21 @@ class OperatorPatientTest extends TestCase {
         $this->actingAs($user)
             # Try creating a proper customer
             ->visit('/patient/create')
-            ->type("test_user", "patientname")->type("test_email@test.com", "email")->type("password", "passcode")->type('20-03-1980', 'dob')->select('1', 'sex')
+            ->type("awierdusernamethatwillnotconflictanymore", "patientname")
+            ->type("awierdusernamethatwillnotconflictanymore@test.com", "email")
+            ->type("awierdpasswordthatshouldnotconflict", "passcode")
+            ->type('20-03-1980', 'dob')
+            ->select('1', 'sex')
             ->press("Save Patient Details")
-            ->seePageIs("/patient")->see("test_user")->see("test_email@test.com")->see("password")
-            ->seeInDatabase('users', ['email'       => 'test_email@test.com', 'name'        => 'test_user',
-                'is_operator' => '0']);
+            ->seePageIs("/patient")
+            ->see("awierdusernamethatwillnotconflictanymore")
+            ->see("awierdusernamethatwillnotconflictanymore@test.com")
+            ->see("awierdpasswordthatshouldnotconflict")
+            ->seeInDatabase('users', [
+                'email'       => 'awierdusernamethatwillnotconflictanymore@test.com',
+                'name'        => 'awierdusernamethatwillnotconflictanymore',
+                'is_operator' => '0'
+        ]);
 
 //        $this->deleteUser($user);
     }
@@ -57,44 +66,70 @@ class OperatorPatientTest extends TestCase {
         $user = $this->createOperator();
 
         $this->actingAs($user)
-            ->visit('/patient/create')->seePageIs('/patient/create')->see('Create New Patient')->see('Save Patient Details')
+            ->visit('/patient/create')
+            ->seePageIs('/patient/create')
+            ->see('Create New Patient')
+            ->see('Save Patient Details')
             # Test without Username
-            ->type("", "patientname")->type("patient@test.cm", "email")->type("password1", "passcode")->type('31-05-1984', 'dob')->select('1', 'sex')
+            ->type("", "patientname")
+            ->type("awierdusernamethatwillnotconflictanymore@test.cm", "email")
+            ->type("password1", "passcode")
+            ->type('31-05-1984', 'dob')
+            ->select('1', 'sex')
             ->press("Save Patient Details")
-            ->seePageIs("/patient/create")->see("The patientname field is required");
+            ->seePageIs("/patient/create")
+            ->see("The patientname field is required");
 
         $this->actingAs($user)
             # Test without Email
             ->visit('/patient/create')
-            ->type("Test Patient", "patientname")->type("", "email")->type("password1", "passcode")->type('31-05-1984', 'dob')->select('1', 'sex')
+            ->type("awierdusernamethatwillnotconflictanymore", "patientname")
+            ->type("", "email")
+            ->type("password1", "passcode")
+            ->type('31-05-1984', 'dob')
+            ->select('1', 'sex')
             ->press("Save Patient Details")
-            ->seePageIs("/patient/create")->see("The email field is required");
+            ->seePageIs("/patient/create")
+            ->see("The email field is required");
 
         $this->actingAs($user)
             # Test without Password
             ->visit('/patient/create')
-            ->type("Test Patient", "patientname")->type("patient@test.cm", "email")->type("", "passcode")->type('31-05-1984', 'dob')->select('1', 'sex')
+            ->type("awierdusernamethatwillnotconflictanymore", "patientname")
+            ->type("awierdusernamethatwillnotconflictanymore@test.cm", "email")
+            ->type("", "passcode")
+            ->type('31-05-1984', 'dob')
+            ->select('1', 'sex')
             ->press("Save Patient Details")
-            ->seePageIs("/patient/create")->see("The passcode field is required");
+            ->seePageIs("/patient/create")
+            ->see("The passcode field is required");
 
         $this->actingAs($user)
             # Test without dob
             ->visit('/patient/create')
-            ->type("Test Patient", "patientname")->type("patient@test.cm", "email")->type("password", "passcode")->type('', 'dob')->select('1', 'sex')
+            ->type("awierdusernamethatwillnotconflictanymore", "patientname")
+            ->type("awierdusernamethatwillnotconflictanymore@test.cm", "email")
+            ->type("password", "passcode")
+            ->type('', 'dob')
+            ->select('1', 'sex')
             ->press("Save Patient Details")
-            ->seePageIs("/patient/create")->see("The dob field is required");
+            ->seePageIs("/patient/create")
+            ->see("The dob field is required");
 
 //        $this->deleteUser($user);
     }
 
     public function testViewPatient() {
-        $oper = $this->createOperator();
+        $oper    = $this->createOperator();
         $patient = $this->createPatient();
         $this->actingAs($oper)
             ->visit('/patient')
-            ->seePageIs('/patient')->see('List Of Patients')
+            ->seePageIs('/patient')
+            ->see('List Of Patients')
             ->click('view_patient')
-            ->see('Patient Details')->see("Patient Name")->see("Date Of Birth");
+            ->see('Patient Details')
+            ->see("Patient Name")
+            ->see("Date Of Birth");
     }
 
     public function testEditPatient() {
@@ -102,7 +137,8 @@ class OperatorPatientTest extends TestCase {
         $patient  = $this->createPatient();
         $operator = $this->createOperator();
         // check if the patient is present in the database and get the Id
-        $this->seeInDatabase('users', ["name"        => $patient->name,
+        $this->seeInDatabase('users', [
+            "name"        => str_slug($patient->name, "_"),
             "email"       => $patient->email,
             "passcode"    => $patient->passcode,
             "is_operator" => '0']
@@ -114,18 +150,25 @@ class OperatorPatientTest extends TestCase {
             // check if you see correct patient details
             ->see("Edit Patient")->see($patient->name)->see($patient->email)->see($patient->passcode)
             // update the username , email, passcode
-            ->type("Test Patient", "patientname")->type("testemailaddress@test.com", "email")->type("password1", "passcode")->type('31-05-1984', 'dob')->select('1', 'sex')
+            ->type("Test Patient", "patientname")
+            ->type("testemailaddress@test.com", "email")
+            ->type("password1", "passcode")
+            ->type('31-05-1984', 'dob')
+            ->select('1', 'sex')
             // click on submit
             ->press("Save Patient Details")
             // check if the new details are in the database
             ->seeInDatabase('users', [
-                "name"        => "Test Patient",
+                "name"        => str_slug("Test Patient", "_"),
                 "email"       => "testemailaddress@test.com",
                 "passcode"    => "password1",
                 "is_operator" => '0']
             )
             // check if the new details are on the webpage
-            ->seePageIs("/patient")->see("Test Patient")->see("testemailaddress@test.com")->see("password1");
+            ->seePageIs("/patient")
+            ->see(str_slug("Test Patient", "_"))
+            ->see("testemailaddress@test.com")
+            ->see("password1");
     }
 
     /**
@@ -144,25 +187,46 @@ class OperatorPatientTest extends TestCase {
         // Test without Username
         $this->actingAs($operator)
             ->visit("/patient/$patient->id/edit")
-            ->type("", "patientname")->type("testemailaddress@test.com", "email")->type("password1", "passcode")->type('31-05-1984', 'dob')->select('1', 'sex')
+            ->type("", "patientname")
+            ->type("testemailaddress@test.com", "email")
+            ->type("password1", "passcode")
+            ->type('31-05-1984', 'dob')
+            ->select('1', 'sex')
             ->press("Save Patient Details")
-            ->seePageIs("/patient/$patient->id/edit")->see("The patientname field is required");
+            ->seePageIs("/patient/$patient->id/edit")
+            ->see("The patientname field is required");
+            
         // Test without email
         $this->actingAs($operator)
             ->visit("/patient/$patient->id/edit")
-            ->type("testname", "patientname")->type("", "email")->type("password1", "passcode")->type('31-05-1984', 'dob')->select('1', 'sex')
+            ->type("testname", "patientname")
+            ->type("", "email")
+            ->type("password1", "passcode")
+            ->type('31-05-1984', 'dob')
+            ->select('1', 'sex')
             ->press("Save Patient Details")
-            ->seePageIs("/patient/$patient->id/edit")->see("The email field is required");
+            ->seePageIs("/patient/$patient->id/edit")
+            ->see("The email field is required");
+        
         // Test without passcode
         $this->actingAs($operator)
             ->visit("/patient/$patient->id/edit")
-            ->type("testname", "patientname")->type("testemailaddress@test.com", "email")->type("", "passcode")->type('31-05-1984', 'dob')->select('1', 'sex')
+            ->type("testname", "patientname")
+            ->type("testemailaddress@test.com", "email")
+            ->type("", "passcode")
+            ->type('31-05-1984', 'dob')
+            ->select('1', 'sex')
             ->press("Save Patient Details")
-            ->seePageIs("/patient/$patient->id/edit")->see("The passcode field is required");
+            ->seePageIs("/patient/$patient->id/edit")
+            ->see("The passcode field is required");
+        
         // Test without any parameters
         $this->actingAs($operator)
             ->visit("/patient/$patient->id/edit")
-            ->type("", "patientname")->type("", "email")->type("", "passcode")->type('', 'dob')
+            ->type("", "patientname")
+            ->type("", "email")
+            ->type("", "passcode")
+            ->type('', 'dob')
             ->press("Save Patient Details")
             ->seePageIs("/patient/$patient->id/edit")
             ->see("The passcode field is required")
@@ -182,7 +246,9 @@ class OperatorPatientTest extends TestCase {
             ->seePageIs('/patient')
             ->see("delete_$patient->id")
             // click on delete
-            ->press("delete_$patient->id")->see('List Of Patients')->seePageIs('/patient')
+            ->press("delete_$patient->id")
+            ->see('List Of Patients')
+            ->seePageIs('/patient')
             // check if the webpage shows the deleted user
             ->dontSee($patient->name)
             ->dontSee($patient->email)
