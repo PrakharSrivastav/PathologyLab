@@ -31,9 +31,9 @@ $factory->define(App\Report::class, function(Faker\Generator $faker) {
         "testing_lab"      => $faker->company,
         "case_number"      => str_random(12),
         "report_name"      => $faker->streetName,
-        "patient_history"  => $faker->sentence(10),
-        "description"      => $faker->sentences,
+        "patient_history"  => $faker->text(),
+        "description"      => $faker->text(),
         "status"           => '0',
-        "addition_details" => $faker->sentences
+        "addition_details" => $faker->text()
     ];
 });

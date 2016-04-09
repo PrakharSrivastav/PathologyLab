@@ -80,14 +80,22 @@ class OperatorReportsTest extends TestCase {
         $patient  = $this->createPatient();
         $report   = $this->createReport($patient);
         // login as operator
-        
+
         $this->actingAs($operator)
             // go to the edit report page
-            ->visit("report/$report->id/edit")->see("Edit Report")->see($patient->name);
-        // change the report details
-        // submit form
-        // check if the new report are in the database
-        // check if the new report details are on the webpage
+            ->visit("report/$report->id/edit")->see("Edit Report")->see($patient->name)->see($report->name)->see($report->description)
+            // change the report details
+            ->select($patient->id, "patient")->type("testreportname", "reportname")->type("thesearerandomreportdetails", "reportdetails")
+            // submit form
+            ->press("Save Report")
+            // check if the new report are in the database
+            ->seeInDatabase("reports", [
+                "id"          => $report->id,
+                "report_name"  => "testreportname",
+                "description" => "thesearerandomreportdetails"
+            ])
+            // check if the new report details are on the webpage
+            ->seePageIs('dashboard')->see("testreportname")->see("thesearerandomreportdetails");
     }
 
     public function testDeleteReport() {
@@ -128,8 +136,7 @@ class OperatorReportsTest extends TestCase {
         $report = factory(App\Report::class)->create([
             "user_id" => $patient->id
         ]);
-        
-        file_put_contents('filename.txt',print_r($report,true));
+
         return $report;
     }
 

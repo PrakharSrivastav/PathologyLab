@@ -37,14 +37,14 @@ class ReportController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function store(ReportRequest $request) {
-        $report                     = new Report();
-        $report->user_id            = $request->input('patient');
-        $report->test_date          = $request->input('testdate');
-        $report->testing_lab        = $request->input('testedby');
-        $report->case_number        = str_random(12);
-        $report->report_name        = $request->input('reportname');
-        $report->patient_history    = $request->input('history');
-        $report->description        = $request->input('reportdetails');
+        $report                   = new Report();
+        $report->user_id          = $request->input('patient');
+        $report->test_date        = $request->input('testdate');
+        $report->testing_lab      = $request->input('testedby');
+        $report->case_number      = str_random(12);
+        $report->report_name      = $request->input('reportname');
+        $report->patient_history  = $request->input('history');
+        $report->description      = $request->input('reportdetails');
         $report->addition_details = $request->input("additionaldetails");
         $report->save();
         return redirect()->route('dashboard');
@@ -58,7 +58,7 @@ class ReportController extends Controller {
      */
     public function show($report) {
         $title = "Report Details";
-        return view("login.report", compact("title","report"));
+        return view("login.report", compact("title", "report"));
     }
 
     /**
@@ -68,9 +68,10 @@ class ReportController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function edit($report) {
-        $report = Report::findOrFail($report);
-        $title = "Edit Report";
-        return view("login.edit-report", compact("title","report"));
+        $report   = Report::findOrFail($report);
+        $patients = User::patients()->get();
+        $title    = "Edit Report";
+        return view("login.edit-report", compact("patients", "title", "report"));
     }
 
     /**
@@ -80,7 +81,16 @@ class ReportController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id) {
+    public function update(ReportRequest $request, $report) {
+        $report = Report::findOrFail($report);
+        $report->user_id          = $request->input('patient');
+        $report->test_date        = $request->input('testdate');
+        $report->testing_lab      = $request->input('testedby');
+        $report->report_name      = $request->input('reportname');
+        $report->patient_history  = $request->input('history');
+        $report->description      = $request->input('reportdetails');
+        $report->addition_details = $request->input("additionaldetails");
+        $report->save();
         return redirect()->route('dashboard');
     }
 
