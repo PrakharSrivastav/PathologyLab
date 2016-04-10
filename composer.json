@@ -15,7 +15,8 @@
         "phpunit/phpunit": "~4.0",
         "symfony/css-selector": "2.8.*|3.0.*",
         "symfony/dom-crawler": "2.8.*|3.0.*",
-        "phpmailer/phpmailer":"5.2.*"
+        "phpmailer/phpmailer":"5.2.*",
+        "barryvdh/laravel-dompdf": "0.6.*"
     },
     "autoload": {
         "classmap": [

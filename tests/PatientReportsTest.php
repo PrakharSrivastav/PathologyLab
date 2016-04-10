@@ -22,20 +22,17 @@ class PatientReportsTest extends TestCase {
             ->seePageIs("dashboard")
             ->see("Welcome " . $patient->name)
             ->see("My Reports");
-
         $this->deleteUser($patient);
     }
 
-    public function testViewReports() {
-        
-    }
 
     public function testGeneratePDFReports() {
-        
-    }
-
-    public function testDownloadReports() {
-        
+        $patient = $this->createPatient();
+        $report = $this->createReport($patient);
+        $db = new \App\Http\Controllers\DashboardController();
+        $filename = $db->createReport($report->id);
+        $this->assertFileExists($filename);
+        $this->assertEquals(str_slug($report->user->name." ".$report->report_name).'.pdf', $filename);
     }
 
     public function testEmailReports() {

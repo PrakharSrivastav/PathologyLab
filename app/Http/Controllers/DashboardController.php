@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\User;
 use App\Report;
+use Barryvdh\DomPDF\Facade as PDF;
 
 class DashboardController extends Controller {
 
@@ -39,7 +40,7 @@ class DashboardController extends Controller {
             return $this->patient_dashboard();
         }
     }
-    
+
     /**
      * This function fetches relevant details from the database and
      * redirects to the operator database
@@ -60,8 +61,25 @@ class DashboardController extends Controller {
      */
     private function patient_dashboard() {
         $title   = "Patient Dashboard";
-        $reports = Report::all()->where("user_id",Auth::user()->id);
+        $reports = Report::all()->where("user_id", Auth::user()->id);
         return view("login.dashboard-patient", compact("title", "reports"));
     }
+
+    public function downloadReport($id) {
+        $file_name = $this->createReport($id);
+        return response()->download($file_name);
+    }
+
+    public function createReport($id) {
+        $report      = Report::findOrFail($id);
+        $title       = "Report Details";
+        $report_name = str_slug($report->user->name . " " . $report->report_name) . '.pdf';
+        if (!file_exists($report_name)) {
+            $pdf = PDF::loadView("pdf.download", compact("report", "title"));
+            $pdf->save($report_name);
+        }
+        return $report_name;
+    }
+
 
 }
