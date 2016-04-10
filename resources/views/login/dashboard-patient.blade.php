@@ -28,7 +28,7 @@
                         <td><a class="btn btn-sm btn-default btn-action btn-block"  href="{{route('report.show',['id'=>$report->id])}}">{{($report->user->name == "")?"-":$report->user->name}}</a></td>
                         <td><a class="btn btn-sm btn-default btn-action btn-block"  href="{{route('report.show',['id'=>$report->id])}}">{{($report->case_number == "")?"-":$report->case_number}}</a></td>
                         <td><a class="btn btn-sm btn-default btn-action btn-block"  href="{{route('report.show',['id'=>$report->id])}}">{{($report->test_date == "")?"-":$report->test_date->format('d-m-Y')}}</a></td>
-                        <td><a class="btn btn-sm btn-default btn-action btn-block"  href="{{route('report.show',['id'=>$report->id])}}">{{($report->status == "")?"-":$report->status}}</a></td>
+                        <td><a class="btn btn-sm btn-default btn-action btn-block"  href="{{route('report.show',['id'=>$report->id])}}">{{($report->status == "")?"-":($report->status == '0')? "In Progress" : (($report->status =='1')?"Generate":"Delivered")}}</a></td>
                         <td><a class="btn btn-sm btn-default btn-action btn-block"  href="{{route('report.show',['id'=>$report->id])}}">{{($report->description == "")?"-":substr($report->description,0,50).".."}}</a></td>
                         <td><a class="btn btn-sm btn-default btn-action btn-block"  href="{{route('report.show',['id'=>$report->id])}}">{{($report->test_date == "")?"-":$report->test_date->format('d-m-Y')}}</a></td>
                         <td><a class="btn btn-sm btn-info btn-action-normal btn-block" id="view_report_{{$report->id}}" href="{{route('report.show',['id'=>$report->id])}}"><span class="glyphicon glyphicon-eye-open"></span></a></td>

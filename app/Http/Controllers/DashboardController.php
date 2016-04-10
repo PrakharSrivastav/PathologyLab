@@ -64,7 +64,7 @@ class DashboardController extends Controller {
      */
     private function patient_dashboard() {
         $title   = "Patient Dashboard";
-        $reports = Report::all()->where("user_id", Auth::user()->id);
+        $reports = Report::where("user_id", Auth::user()->id)->get();//Report::all()->where("user_id", Auth::user()->id);
         return view("login.dashboard-patient", compact("title", "reports"));
     }
 
