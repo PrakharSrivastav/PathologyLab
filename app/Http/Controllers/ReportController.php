@@ -10,30 +10,28 @@ use App\Report;
 use App\Http\Requests\ReportRequest;
 use Illuminate\Support\Facades\Gate;
 
+/**
+ * This controller class takes care of all the report related features.
+ * The basic CRUD operations are defined in this class
+ * There are also policies defined in App/Providers/AuthServiceProvider called "is_admin" and "view_reports"
+ * which allow / deny patient to access various controller actions
+ */
 class ReportController extends Controller {
 
-    private function showDashboard() {
-        return redirect()->route('dashboard');
-    }
-
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index() {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
+     * Show the form for creating a new report.
+     * Only operator has the access to create a report
+     * The patient would be redirected to their dashboard if they try to access this page
+     * 
      * @return \Illuminate\Http\Response
      */
     public function create() {
+
+        # if the is_admin policy is not satisfied redirect to the dashboard
         if (Gate::denies('is_admin')) {
             return $this->showDashboard();
         }
+        # else show the form to create a report
         else {
             $title    = "Create Report";
             $patients = User::patients()->get();
@@ -42,13 +40,18 @@ class ReportController extends Controller {
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
+     * Store a newly created report in datbase.
+     * Only operator has the access to create a report
+     * The patient would be redirected to their dashboard without any operation
+     * 
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(ReportRequest $request) {
+
+        # Only if the user is an operator perform the below operations
         if (Gate::allows('is_admin')) {
+            # create a new report
             $report                   = new Report();
             $report->user_id          = $request->input('patient');
             $report->test_date        = $request->input('testdate');
@@ -64,31 +67,42 @@ class ReportController extends Controller {
     }
 
     /**
-     * Display the specified resource.
-     *
+     * Display the specified report.
+     * Both patient and the operator are able to view this page.
+     * However, there are seperate views defined for operator and patient 
+     * and the user is shown the corresponding view based on the property is_operator 
+     * 
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show($report) {
+        # Find the report
         $report = Report::findOrFail($report);
+        $title = "Report Details";
+            
+        # check the policy if the user is allowed to view the report
         if (Gate::allows('view_reports', $report)) {
-            $title = "Report Details";
-            if(Auth::user()->is_operator == "1"){
+            
+            # if the user is an opertor
+            if (Auth::user()->is_operator == "1") {
                 return view("login.report-operator", compact("report", "title"));
             }
-            else{
+            # else the user is a patient
+            else {
                 return view("login.report", compact("report", "title"));
             }
-            
         }
+        # if the policy does not allow the user to view this page
+        # then show the dashboard to the user
         else {
             return $this->showDashboard();
         }
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
+     * Show the form for editing the specified report.
+     * Only the operator has an access to this page
+     * 
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
@@ -105,14 +119,16 @@ class ReportController extends Controller {
     }
 
     /**
-     * Update the specified resource in storage.
-     *
+     * Update the specified report in database.
+     * Only the operator has an access to this function.
+     * 
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(ReportRequest $request, $report) {
         if (Gate::allows("is_admin")) {
+            # save the new report details
             $report                   = Report::findOrFail($report);
             $report->user_id          = $request->input('patient');
             $report->test_date        = $request->input('testdate');
@@ -127,8 +143,9 @@ class ReportController extends Controller {
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
+     * Remove the specified report from database.
+     * Only the operator has an access to this function.
+     * 
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
@@ -137,6 +154,19 @@ class ReportController extends Controller {
             Report::destroy($report);
         }
         return $this->showDashboard();
+    }
+
+    /**
+     * A helper function to navigate the users to dashboard
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    private function showDashboard() {
+        return redirect()->route('dashboard');
+    }
+
+    public function index() {
+        // not required. moved this functionality to route("dashboard")
     }
 
 }

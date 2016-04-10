@@ -18,7 +18,12 @@ class PatientRequest extends Request
 
     /**
      * Get the validation rules that apply to the request.
-     *
+     * patientname      required | minimum 3 characters
+     * email            required | email
+     * passcode         required
+     * dob              required | date should be in the format dd-mm-yyyy
+     * sex              required | value should be in [0,1,2]
+     * 
      * @return array
      */
     public function rules()

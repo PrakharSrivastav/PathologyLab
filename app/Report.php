@@ -53,6 +53,11 @@ class Report extends Model {
         return $this->belongsTo('App\User');
     }
     
+    /**
+     * Format the test_date in teh carbon format
+     * 
+     * @param type $testdate
+     */
     public function setTestDateAttribute($testdate){
         $this->attributes['test_date'] = Carbon::createFromFormat('d-m-Y', $testdate);
     }

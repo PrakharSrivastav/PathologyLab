@@ -17,7 +17,14 @@ class ReportRequest extends Request {
 
     /**
      * Get the validation rules that apply to the request.
-     *
+     * patient           required
+     * testdate          required | date should be in the format dd-mm-yyyy
+     * testedby          required | minimum 2 characters
+     * reportname        required | minimum 5 characters
+     * reportdetails     required | minimum 5 characters
+     * additionaldetails minimum 3 characters
+     * history           minimum 3 characters
+     * 
      * @return array
      */
     public function rules() {

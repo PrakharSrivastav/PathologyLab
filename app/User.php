@@ -64,6 +64,11 @@ class User extends Authenticatable {
      */
     protected $dates = ['dob'];
     
+    /**
+     * set the format for the dob
+     * 
+     * @param type $dob
+     */
     public function setDobAttribute($dob){
         $this->attributes['dob'] = Carbon::createFromFormat('d-m-Y', $dob);
     }

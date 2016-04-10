@@ -24,22 +24,29 @@ class AuthServiceProvider extends ServiceProvider {
      */
     public function boot(GateContract $gate) {
 
-        // ACL for only operators
+        # Policy to grant access only to the operator
         $gate->define('is_admin', function ($user) {
             if($user->is_operator == '1'){
                 return true;
             }
         });
         
+        # policy to make sure that only users falling under this
+        # policy has access to view the reports
         $gate->define("view_reports",function($user, $report){
+            
+            # only if the user is an operator
             if($user->is_operator == '1'){
                 return true;
             }
             
+            # Only if the report belongs to the patient
             if($user->is_operator == '0'){
                 return ($user->id === $report->user_id);
             }
         });
+        
+        
         $this->registerPolicies($gate);
 
         

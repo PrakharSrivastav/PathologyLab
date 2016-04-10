@@ -14,22 +14,24 @@ class DashboardController extends Controller {
 
     /**
      * The constructor check if the user is logged in or not
-     * If the user is not logged-in the they are redirect to login page
+     * If the user is not logged-in the they are redirected to login page
      * 
-     * @return View
+     * @return \Illuminate\Http\Response
      */
     public function __construct() {
+        # check if current User is authenticated
         if (!Auth::check()) {
+            # logout before redirecting the user the homepage
             Auth::logout();
+            # redirect to the homepage
             return redirect()->route('home');
         }
     }
 
     /**
-     * This function shows the dashboard to the operator
+     * This function shows the operator dashboard
      * 
-     * 
-     * @return View
+     * @return \Illuminate\Http\Response
      */
     public function index() {
         # If current logged-in user is Operator then login to operator dashboard
@@ -46,7 +48,7 @@ class DashboardController extends Controller {
      * This function fetches relevant details from the database and
      * redirects to the operator database
      * 
-     * @return View
+     * @return \Illuminate\Http\Response
      */
     private function operator_dashboard() {
         $title   = "Operator Dashboard";
@@ -58,7 +60,7 @@ class DashboardController extends Controller {
      * This function fetches relevant details from the database and
      * redirects to the patient database
      * 
-     * @return View
+     * @return \Illuminate\Http\Response
      */
     private function patient_dashboard() {
         $title   = "Patient Dashboard";
@@ -70,7 +72,7 @@ class DashboardController extends Controller {
      * Function to download the reports
      * 
      * @param type $id
-     * @return filestream 
+     * @return \Illuminate\Http\Response 
      */
     public function downloadReport($id) {
         $report_name = $this->createReport($id);
@@ -105,10 +107,10 @@ class DashboardController extends Controller {
      * send the email
      * 
      * @param type $id
+     * @return \Illuminate\Http\Response
      */
     public function sendReportAsEmail($id) {
         $report = Report::findOrFail($id);
-
 
         $this->sendEmail($report);
         return redirect()->route("dashboard");
@@ -127,20 +129,25 @@ class DashboardController extends Controller {
      */
     public function sendEmail($report) {
         try {
-            $title            = "Report Details";
+            # set up PHPMailer Library
             $mail             = new \PHPMailer(true);
+            
+            # variables
+            $title            = "Report Details";
             $filename         = $this->createReport($report->id);
+
+            # set the PHPMailer properties
             $mail->isSMTP();
             $mail->CharSet    = "utf-8";
             $mail->SMTPAuth   = true;
-            $mail->SMTPSecure = "ssl";
-            $mail->Host       = "smtp.gmail.com";
-            $mail->Port       = 465;
-            $mail->Username   = "patholigylabreports@gmail.com";
-            $mail->Password   = "thisisauniqueemailpassword123";
+            $mail->SMTPSecure = env('MAIL_ENCRYPTION');
+            $mail->Host       = env('MAIL_HOST');
+            $mail->Port       = env('MAIL_PORT');
+            $mail->Username   = env('MAIL_USERNAME');
+            $mail->Password   = env('MAIL_PASSWORD');
             $mail->Subject    = "Pathology Lab Report : " . $filename;
             $mail->setFrom(
-                "patholigylabreports@gmail.com", "Pathology Lab Report "
+                env('MAIL_USERNAME'), "Pathology Lab Report "
             );
             $mail->MsgHTML(
                 view("pdf.download", compact("report", "title"))
@@ -151,6 +158,8 @@ class DashboardController extends Controller {
             $mail->addAttachment(
                 $filename, $filename
             );
+            
+            # send email
             return $mail->send();
         }
         catch (phpmailerException $e) {

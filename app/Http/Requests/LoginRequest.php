@@ -25,7 +25,7 @@ class LoginRequest extends Request
 
     /**
      * Get the validation rules that apply to the request.
-     * username required | alpha numeric | minimum 3 characters
+     * username required | alpha_dash | minimum 3 characters
      * password required
      * 
      * @return array
