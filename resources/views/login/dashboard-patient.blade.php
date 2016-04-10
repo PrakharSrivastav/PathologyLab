@@ -33,7 +33,7 @@
                         <td><a class="btn btn-sm btn-default btn-action btn-block"  href="{{route('report.show',['id'=>$report->id])}}">{{($report->test_date == "")?"-":$report->test_date->format('d-m-Y')}}</a></td>
                         <td><a class="btn btn-sm btn-info btn-action-normal btn-block" id="view_report_{{$report->id}}" href="{{route('report.show',['id'=>$report->id])}}"><span class="glyphicon glyphicon-eye-open"></span></a></td>
                         <td><a class="btn btn-sm btn-warning btn-action-normal btn-block" id="download_report_{{$report->id}}" href="{{route('download',['id'=>$report->id])}}"><span class="glyphicon glyphicon-download-alt"></span></a></td>
-                        <td><a class="btn btn-sm btn-danger btn-action-normal btn-block" id="email_report_{{$report->id}}"><span class="glyphicon glyphicon-envelope"></span></a></td>
+                        <td><a class="btn btn-sm btn-danger btn-action-normal btn-block" id="email_report_{{$report->id}}" href="{{route('report.email',[$report->id])}}"><span class="glyphicon glyphicon-envelope"></span></a></td>
                      </tr>
                     @endforeach
                     @endif

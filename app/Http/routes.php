@@ -23,6 +23,7 @@ Route::get("download/{id}","DashboardController@downloadReport")->name("download
 
 Route::group(['middleware' => 'auth'], function() {
     # dashboard
+    Route::get('/report/email/{id}',"DashboardController@sendReportAsEmail")->name("report.email");
     Route::get('dashboard', "DashboardController@index")->name("dashboard");
     # reports related routes
     Route::resource("report", "ReportController");

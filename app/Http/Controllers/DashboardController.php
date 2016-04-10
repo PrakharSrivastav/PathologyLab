@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\User;
 use App\Report;
 use Barryvdh\DomPDF\Facade as PDF;
+use PHPMailer;
 
 class DashboardController extends Controller {
 
@@ -65,11 +66,24 @@ class DashboardController extends Controller {
         return view("login.dashboard-patient", compact("title", "reports"));
     }
 
+    /**
+     * Function to download the reports
+     * 
+     * @param type $id
+     * @return filestream 
+     */
     public function downloadReport($id) {
-        $file_name = $this->createReport($id);
-        return response()->download($file_name);
+        $report_name = $this->createReport($id);
+        return response()->download($report_name);
     }
 
+    /**
+     * Function to generate reports and save it in the filesystem
+     * In case the file already exists, send the old file
+     * 
+     * @param type $id
+     * @return string $report_name
+     */
     public function createReport($id) {
         $report      = Report::findOrFail($id);
         $title       = "Report Details";
@@ -81,5 +95,72 @@ class DashboardController extends Controller {
         return $report_name;
     }
 
+    /**
+     * Function to email report to the patient
+     * Get the report from the reportId
+     * Get the email-id of the patient
+     * Generate the report (Use the createReport function)
+     * Create the email view
+     * Set in the the email parameters
+     * send the email
+     * 
+     * @param type $id
+     */
+    public function sendReportAsEmail($id) {
+        $report = Report::findOrFail($id);
+
+
+        $this->sendEmail($report);
+        return redirect()->route("dashboard");
+    }
+
+    /**
+     * set charset to utf8
+     * use smpt auth
+     * ssl setting
+     * provide the smtp address
+     * provide the ssl port
+     * provide the other email related details
+     * 
+     * @param type $report
+     * @return boolean
+     */
+    public function sendEmail($report) {
+        try {
+            $title            = "Report Details";
+            $mail             = new \PHPMailer(true);
+            $filename         = $this->createReport($report->id);
+            $mail->isSMTP();
+            $mail->CharSet    = "utf-8";
+            $mail->SMTPAuth   = true;
+            $mail->SMTPSecure = "ssl";
+            $mail->Host       = "smtp.gmail.com";
+            $mail->Port       = 465;
+            $mail->Username   = "patholigylabreports@gmail.com";
+            $mail->Password   = "thisisauniqueemailpassword123";
+            $mail->Subject    = "Pathology Lab Report : " . $filename;
+            $mail->setFrom(
+                "patholigylabreports@gmail.com", "Pathology Lab Report "
+            );
+            $mail->MsgHTML(
+                view("pdf.download", compact("report", "title"))
+            );
+            $mail->addAddress(
+                $report->user->email, $report->user->name
+            );
+            $mail->addAttachment(
+                $filename, $filename
+            );
+            return $mail->send();
+        }
+        catch (phpmailerException $e) {
+            dd($e);
+            return false;
+        }
+        catch (Exception $e) {
+            dd($e);
+            return false;
+        }
+    }
 
 }

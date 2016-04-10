@@ -36,7 +36,13 @@ class PatientReportsTest extends TestCase {
     }
 
     public function testEmailReports() {
+        $patient = $this->createPatient();
+        $report = $this->createReport($patient);
         
+        $dashboard = new \App\Http\Controllers\DashboardController();
+        $reponse = $dashboard->sendEmail($report);
+        
+        $this->assertTrue($reponse);
     }
 
     /**
