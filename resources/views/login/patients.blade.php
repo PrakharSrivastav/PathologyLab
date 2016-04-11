@@ -29,7 +29,7 @@
                         <td><a class="btn btn-sm btn-default btn-action btn-block" href="{{route('patient.show',['patient'=>$patient->id])}}">{{$patient->passcode}}</a></td>
                         <td><a class="btn btn-sm btn-default btn-action btn-block" href="{{route('patient.show',['patient'=>$patient->id])}}">{{$patient->dob->format('d-m-Y')}}</a></td>
                         <td><a class="btn btn-sm btn-default btn-action btn-block" href="{{route('patient.show',['patient'=>$patient->id])}}">{{($patient->sex == '1')?'Male':'Female'}}</a></td>
-                        <td><a class="btn btn-sm btn-default btn-action btn-block" href="{{route('patient.show',['patient'=>$patient->id])}}">{{($patient->is_operator == '0')?'Yes':'NO'}}</a></td>
+                        <td><a class="btn btn-sm btn-default btn-action btn-block" href="{{route('patient.show',['patient'=>$patient->id])}}">{{($patient->is_operator == '0')?'No':'Yes'}}</a></td>
                         <td><a id="view_patient" class="btn btn-sm btn-info btn-action-normal btn-block" href="{{route('patient.show',['patient'=>$patient->id])}}"><span class="glyphicon glyphicon-eye-open"></span></a></td>
                         <td><a class="btn btn-sm btn-warning btn-action-normal btn-block" href="{{route('patient.edit',['patient'=>$patient->id])}}"><span class="glyphicon glyphicon-edit"></span></a></td>
                         <td><form action="{{route('patient.destroy',['patient'=>$patient->id])}}" method="post">{{ csrf_field() }}<input type="hidden" name="_method" value="DELETE"><button type="submit" id="delete_{{$patient->id}}" class="btn delete btn-sm btn-danger btn-action-normal btn-block"><span class="glyphicon glyphicon-trash"></span></button></form></td>

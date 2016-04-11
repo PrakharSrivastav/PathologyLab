@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\Report;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
@@ -152,6 +153,7 @@ class PatientController extends Controller {
      */
     public function destroy($patient) {
         User::destroy($patient);
+        Report::where('user_id',$patient)->delete();
         return redirect()->route('patient.index');
     }
 

@@ -22,7 +22,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if(isset($reports))
+                    @if(isset($reports) && count($reports) > 0)
                     @foreach($reports as $report)
                     <tr>
                         <td><a class="btn btn-sm btn-default btn-action btn-block" href="{{route('report.show',['id'=>$report->id])}}">{{($report->report_name == "")?"-":$report->report_name}}</a></td>
@@ -42,7 +42,5 @@
             </table>
         </div>
     </div>
-
 </div>
-
 @stop

@@ -18,7 +18,7 @@
                     <tr><td>Passcode</td><td>{{$patient->passcode}}</td></tr>
                     <tr><td>Date Of Birth</td><td>{{$patient->dob}}</td></tr>
                     <tr><td>Sex</td><td>{{($patient->sex == '1')?'Male':'Female'}}</td></tr>
-                    <tr><td>Is Admin</td><td>{{($patient->is_operator == '0')?'Yes':'NO'}}</td></tr>
+                    <tr><td>Is Admin</td><td>{{($patient->is_operator == '0')?'No':'Yes'}}</td></tr>
                     <tr><td>Created</td><td>{{$patient->created_at}}</td></tr>
                     <tr><td>Last Updated</td><td>{{$patient->updated_at}}</td></tr>
             </table>

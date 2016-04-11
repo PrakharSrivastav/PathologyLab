@@ -52,7 +52,7 @@
             <div class="form-group">
                 <label for="testdate" class="col-sm-3 control-label">Test Date</label>
                 <div class="col-sm-9">
-                    <input type="date" class="form-control" id="testdate" name="testdate" placeholder="Date (dd-mm-yyyy) on which the test was taken by patient" value="{{$report->test_date->format('d-m-Y')}}">
+                    <input type="text" class="form-control" id="testdate" name="testdate" placeholder="Date (dd-mm-yyyy) on which the test was taken by patient" value="{{$report->test_date->format('d-m-Y')}}">
                     <div class="text-danger padding-5">{{$errors->first('testdate')}}</div>
                 </div>
             </div>
@@ -61,6 +61,17 @@
                 <div class="col-sm-9">
                     <input type="text" class="form-control" id="testedby" name="testedby" placeholder="Where the test was performed / analysed?" value="{{$report->testing_lab}}">
                     <div class="text-danger padding-5">{{$errors->first('testedby')}}</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="status" class="col-sm-3 control-label">Report Status</label>
+                <div class="col-sm-9">
+                    <select class="form-control input-sm" name="status" id="status">
+                        <option value="0"  {{($report->status == '0')?"selected":""}}>In Progress</option>
+                        <option value="1"  {{($report->status == '1')?"selected":""}}>Generated</option>
+                        <option value="2"  {{($report->status == '2')?"selected":""}}>Delivered</option>
+                    </select>
+                    <div class="text-danger padding-5">{{$errors->first('status')}}</div>
                 </div>
             </div>
             <div class="form-group">

@@ -51,7 +51,7 @@
             <div class="form-group">
                 <label for="testdate" class="col-sm-3 control-label">Test Date</label>
                 <div class="col-sm-9">
-                    <input type="date" class="form-control input-sm" id="testdate"  value="{{old('testdate')}}" name="testdate" placeholder="Date (dd-mm-yyyy) on which the test was taken by patient">
+                    <input type="text" class="form-control input-sm" id="testdate"  value="{{old('testdate')}}" name="testdate" placeholder="Date (dd-mm-yyyy) on which the test was taken by patient">
                     <div class="text-danger padding-5">{{$errors->first('testdate')}}</div>
                 </div>
             </div>
@@ -63,7 +63,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="testedby" class="col-sm-3 control-label">Report Status</label>
+                <label for="status" class="col-sm-3 control-label">Report Status</label>
                 <div class="col-sm-9">
                     <select class="form-control input-sm" name="status" id="status">
                         <option value="0"  {{(old('status') == '0')?"selected":""}}>In Progress</option>

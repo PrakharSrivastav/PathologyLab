@@ -34,7 +34,7 @@
             <div class="form-group">
                 <label for="date" class="col-sm-3 control-label">Date of Birth</label>
                 <div class="col-sm-9">
-                    <input type="date" placeholder="eg. 31-10-1984" class="form-control" id="dob" value="{{old('dob')}}" name="dob" placeholder="Date of Birth">
+                    <input type="text" placeholder="eg. 31-10-1984" class="form-control" id="dob" value="{{old('dob')}}" name="dob" placeholder="Date of Birth">
                     <div class="text-danger padding-5">{{$errors->first('dob')}}</div>
                 </div>
             </div>

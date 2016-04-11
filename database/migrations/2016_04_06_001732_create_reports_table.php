@@ -23,7 +23,11 @@ class CreateReportsTable extends Migration {
             $table->text("description"); // details of the current report
             $table->enum("status", ['0', '1', '2']); //0->inProgress, 1->generated , 2->recieved
             $table->text("addition_details");
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
             $table->softDeletes();
         });
     }

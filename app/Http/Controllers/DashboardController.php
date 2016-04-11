@@ -65,7 +65,7 @@ class DashboardController extends Controller {
      */
     private function patient_dashboard() {
         $title   = "Patient Dashboard";
-        $reports = Report::where("user_id", Auth::user()->id)->get(); //Report::all()->where("user_id", Auth::user()->id);
+        $reports = Report::where("user_id", Auth::user()->id)->get(); 
         return view("login.dashboard-patient", compact("title", "reports"));
     }
 
@@ -178,7 +178,12 @@ class DashboardController extends Controller {
      */
     public function search(Request $request) {
         $q    = $request->input('data');
-        $data = DB::table('users')->select('name')->where('name', 'like', "%$q%")->get();
+        $data = DB::table('users')
+            ->distinct()
+            ->select('name')
+            ->where('name', 'like', "%$q%")
+            ->where('deleted_at','=',null)
+            ->get();
         $res  = [];
         foreach ($data as $dat) {
             $res[] = $dat->name;

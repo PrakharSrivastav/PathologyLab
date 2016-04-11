@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Report extends Model {
     
-    use SoftDeletes;
+//    use SoftDeletes;
     
     /**
      * The attributes that are mass assignable.

@@ -61,6 +61,7 @@ class ReportController extends Controller {
             $report->patient_history  = $request->input('history');
             $report->description      = $request->input('reportdetails');
             $report->addition_details = $request->input("additionaldetails");
+            $report->status           = $request->input("status");
             $report->save();
         }
         return $this->showDashboard();
@@ -81,7 +82,7 @@ class ReportController extends Controller {
         $title = "Report Details";
             
         # check the policy if the user is allowed to view the report
-        if (Gate::allows('view_reports', $report)) {
+        // if (Gate::allows('view_reports', $report)) {
             
             # if the user is an opertor
             if (Auth::user()->is_operator == "1") {
@@ -91,12 +92,12 @@ class ReportController extends Controller {
             else {
                 return view("login.report", compact("report", "title"));
             }
-        }
+        // }
         # if the policy does not allow the user to view this page
         # then show the dashboard to the user
-        else {
-            return $this->showDashboard();
-        }
+        // else {
+            // return $this->showDashboard();
+        // }
     }
 
     /**
@@ -137,6 +138,7 @@ class ReportController extends Controller {
             $report->patient_history  = $request->input('history');
             $report->description      = $request->input('reportdetails');
             $report->addition_details = $request->input("additionaldetails");
+            $report->status           = $request->input("status");
             $report->save();
         }
         return $this->showDashboard();
