@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\User;
+use Illuminate\Support\Facades\DB;
 use App\Report;
 use Barryvdh\DomPDF\Facade as PDF;
 use PHPMailer;
@@ -64,7 +65,7 @@ class DashboardController extends Controller {
      */
     private function patient_dashboard() {
         $title   = "Patient Dashboard";
-        $reports = Report::where("user_id", Auth::user()->id)->get();//Report::all()->where("user_id", Auth::user()->id);
+        $reports = Report::where("user_id", Auth::user()->id)->get(); //Report::all()->where("user_id", Auth::user()->id);
         return view("login.dashboard-patient", compact("title", "reports"));
     }
 
@@ -130,11 +131,11 @@ class DashboardController extends Controller {
     public function sendEmail($report) {
         try {
             # set up PHPMailer Library
-            $mail             = new \PHPMailer(true);
-            
+            $mail = new \PHPMailer(true);
+
             # variables
-            $title            = "Report Details";
-            $filename         = $this->createReport($report->id);
+            $title    = "Report Details";
+            $filename = $this->createReport($report->id);
 
             # set the PHPMailer properties
             $mail->isSMTP();
@@ -158,7 +159,7 @@ class DashboardController extends Controller {
             $mail->addAttachment(
                 $filename, $filename
             );
-            
+
             # send email
             return $mail->send();
         }
@@ -170,6 +171,19 @@ class DashboardController extends Controller {
             dd($e);
             return false;
         }
+    }
+
+    /**
+     * Function to perform autocomplete functionality
+     */
+    public function search(Request $request) {
+        $q    = $request->input('data');
+        $data = DB::table('users')->select('name')->where('name', 'like', "%$q%")->get();
+        $res  = [];
+        foreach ($data as $dat) {
+            $res[] = $dat->name;
+        }
+        return ["search_results" => $res];
     }
 
 }

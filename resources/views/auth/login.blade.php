@@ -11,7 +11,7 @@
             <div class="form-group">
                 <label for="username" class="col-sm-3 control-label">Username : </label>
                 <div class="col-sm-9">
-                    <input type="username" value="{{old('username')}}" class="form-control" id="username" name="username" placeholder="User Name">
+                    <input type="username"  data-provide="typeahead"  autocomplete="off" value="{{old('username')}}" class="typeahead form-control" id="username" name="username" placeholder="User Name">
                     @if (session('login_message'))
                     <div class="text-danger padding-5">{{ session('login_message') }}</div>
                     @else
@@ -22,7 +22,7 @@
             <div class="form-group">
                 <label for="password" class="col-sm-3 control-label">Password : </label>
                 <div class="col-sm-9">
-                    <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+                    <input type="password" class="form-control " id="password" name="password" placeholder="Password">
                     <div class="text-danger padding-5">{{$errors->first('password')}}</div>
                 </div>
             </div>

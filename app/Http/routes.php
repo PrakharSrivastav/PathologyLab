@@ -20,6 +20,8 @@ Route::get('login', "Auth\AuthController@index")->name("login");
 Route::post('login', "Auth\AuthController@login")->name("login");
 Route::get('logout', "Auth\AuthController@logout")->name("logout");
 Route::get("download/{id}","DashboardController@downloadReport")->name("download");
+Route::get("search","DashboardController@search")->name("search");
+
 
 Route::group(['middleware' => 'auth'], function() {
     # dashboard
